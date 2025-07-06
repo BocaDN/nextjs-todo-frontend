@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+Jenkinsfile
+Dockerfile
+.git
+.gitignore
+README.md
+*.md
