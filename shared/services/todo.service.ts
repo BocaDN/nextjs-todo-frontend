@@ -2,7 +2,6 @@ import axios from 'axios';
 import { Todo } from '../types/todo';
 
 class TodoService {
-  // Include `/todo` in base URL
   private static readonly BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/todo`;
   private static instance: TodoService;
 
