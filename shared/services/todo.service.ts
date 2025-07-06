@@ -2,10 +2,11 @@ import axios from 'axios';
 import { Todo } from '../types/todo';
 
 class TodoService {
-  private static readonly BASE_URL = 'http://localhost:3000/api/todo';
+  // Include `/todo` in base URL
+  private static readonly BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/todo`;
   private static instance: TodoService;
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): TodoService {
     if (!TodoService.instance) {
@@ -17,7 +18,6 @@ class TodoService {
   async getAll(): Promise<Todo[]> {
     try {
       const response = await axios.get(TodoService.BASE_URL);
-
       return response.data;
     } catch (error) {
       console.error('Error fetching todos:', error);
@@ -28,7 +28,6 @@ class TodoService {
   async create(todo: Todo): Promise<Todo> {
     try {
       const response = await axios.post(TodoService.BASE_URL, todo);
-
       return response.data;
     } catch (error) {
       console.error('Error creating todo:', error);
@@ -42,7 +41,6 @@ class TodoService {
         `${TodoService.BASE_URL}/${id}`,
         updatedData,
       );
-
       return response.data;
     } catch (error) {
       console.error('Error updating todo:', error);
