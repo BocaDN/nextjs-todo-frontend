@@ -51,12 +51,12 @@ const Todos: React.FC = () => {
 
   const handleSaveTodo = async (): Promise<void> => {
     setLoading(true);
-    const { _id, ...todo } = form;
     try {
-      if (_id) {
-        await todoService.update(form._id, todo);
+      if (form._id) {
+        const { _id, ...updateData } = form;
+        await todoService.update(_id, updateData);
       } else {
-        await todoService.create(todo);
+        await todoService.create(form);
       }
       await getAllTodos();
       closeModal();
@@ -67,13 +67,14 @@ const Todos: React.FC = () => {
     }
   };
 
-  const deleteTodo = async (id: string): Promise<void> => {
+  const deleteTodo = async (id?: string): Promise<void> => {
+    if (!id) return console.error('Missing todo ID!');
     setLoading(true);
     try {
       await todoService.delete(id);
       await getAllTodos();
     } catch (err) {
-      console.error('Failed to delete todo');
+      console.error('Failed to delete todo', err);
     } finally {
       setLoading(false);
     }
@@ -82,7 +83,6 @@ const Todos: React.FC = () => {
   const toggleCompletion = async (todo: Todo) => {
     try {
       await todoService.update(todo._id, {
-        ...todo,
         status:
           todo.status === TodoStatus.TODO
             ? TodoStatus.COMPLETED
@@ -180,9 +180,7 @@ const Todos: React.FC = () => {
               label="Description"
               fullWidth
               value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
             <FormControlLabel
               control={
